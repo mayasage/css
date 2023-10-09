@@ -1,0 +1,2743 @@
+CSS
+
+
+Combining Selectors
+  List Selectors
+    comma separated
+    Example
+      p, li {
+        ...
+      }
+    Don't write the same property everywhere.
+    Use a list selector.
+  Descendant Selector
+    select all children
+    Example
+      footer p {
+        ...
+      }
+    This reflects HTML structure.
+     Meaning, if HTML changes, this can break.
+
+
+Colors
+  - Shades Of Grey
+    => When all 3 channels are same, we get Grey.
+    => There are 256 pure greys.
+    => #000 -> #fff
+    => In the color picker, the left-most colors are always,
+       shades of grey.
+    => Good text color = #444
+    => Good background color = #f7f7f7
+
+
+Psuedo Classes
+  => <selector>:<psuedo-class><psuedo-class>
+  => Example:
+       nav a:link:last-child {
+         ...
+       }
+
+
+Pseudo Elements
+  => Don't exist in HTML, but we can select & style in CSS.
+     Example: first letter of a paragraph (h1::first-letter)
+
+
+Sibling/Adjacent Element Selector
+  => Adjacent element is the one that comes after.
+  => Example: h3 + p {...} => first <p> after <h3>.
+
+
+Negative Lengths
+  => allowed
+  => Example: top: -15px;
+
+
+Styling Hyperlink
+  => a {...}
+     This is bad practice.
+       - You should style specific "states" of hyperlinks,
+       	 using psuedo-classes.
+       - Also, there can be <a> without "href".
+     a:link {...}
+  => :link, :visited, :hover, :active
+
+
+Resolving Conflicts
+  => !important > inline style > id > class > element > universal
+
+
+Inheritance
+  => Mostly text-related properties are inherited.
+  => Put text-related property on parent, instead of selecting all
+     children, and they will be inherited.
+
+
+CSS Box Model (box-sizing: content-box;)
+  => Every element is a Box.
+  => Includes:
+     - Content => Text, images, etc
+     - Border => Line around element, inside element
+     - Padding => Empty space around content, inside element
+     - Margin => Space outside element, between elements
+     - Fill Area
+       => Area that gets filled with "background-color" or
+          "background image".
+       => content + padding
+  => Final element width =
+       left border + left padding +
+       width +
+       right padding + right border
+  => Final element height =
+       top border + top padding +
+       height +
+       bottom padding + bottom border
+
+
+box-sizing: border-box;
+  => Final element width = width
+  => Final element height = height
+  => padding & borders will reduce the inner width & height
+
+
+Global Reset
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+
+CSS Template
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 62.5%;
+  }
+
+  body {
+    font-family: sans-serif;
+    line-height: 1;
+    font-weight: 400;
+    color: #555;
+  }
+
+
+Layout
+  => The way content is arranged on a webpage.
+  => Provides a visual structure, into which we put content.
+  
+
+Types of Layouts
+  Page Layouts
+    Are made up of Components
+    
+  Component Layouts
+    Components also need Layouts
+
+
+3 ways of building layouts
+  Float Layouts
+  
+  Flexbox
+    1D Row
+    Main idea is for children to automatically distribute space
+     inside the parent.
+    Solves hard problems like vertical centering & creating
+     equal-height columns.
+    Perfect for component layouts
+    
+  CSS Grid
+    2D Grid
+    Perfect for page layouts & complex components
+
+
+Float Layouts
+  - How does "float" work?
+    => The element is taken out of the document's flow.
+    => The other elements will float around it.
+       You'll have to add extra padding/margins.
+         FIX: "float" the other element too!
+    => float: left/right/etc...
+    => If you float all children, then the parent's height will become 0
+       (called collapsing on itself).
+       FIX
+         "Clearing Floats"
+	 SOLUTION 1:
+	   1. Add another child element to the parent.
+	   2. clear: left/right/both => which float to clear? 
+	 SOLUTION 2: "ClearFix Hack"
+	   1. Add class="clearfix" to a child.
+	   2. .clearfix::after {
+	        clear: both;
+		content: '';
+		display: block;
+	      }
+	      => after will create a new last child of the parent
+	      => after will only appear if we define something for content,
+	         therefore, content: "";
+	      => after will create an inline element, therefore,
+	         display: block;
+     => Process:
+        1. Use float to position.
+	   The element will go out of the flow.
+	2. Clear float.
+	   The element will come back into the flow.
+
+
+Float VS Absolute Positioning
+  => Absolute Positioning have no impact on surrounding elements.
+     Text & inline elements wraps around the floated element.
+  => Parent won't adjust height when all children are floated.
+     
+
+Vertical Spacing
+  => Use either margin-top or margin-bottom.
+  => Jonas likes margin-bottom.
+  => Collapsing margins: When we have 2 margins collapsing,
+     only 1 will be visible. Usually, the larger one.
+
+
+height:auto;
+  => automatically adjust height based on width
+  => only needed if a height is already specified
+     else, height will automatically adjust according to aspect ratio
+
+
+Unit: %
+  => width: 100% means that element will adjust to container
+
+
+Centering:
+  1. Create a div (let class = container).
+  2. Give it a width.
+     Children can't be wider than parent.
+  3. Give it:
+       margin-left: auto;
+       margin-right: auto;
+         auto gives the same margin to the left and right side automatically
+	  equal margin in both side makes the content appear as centered
+     This will center the element inside it's parent.
+     
+     
+ CSS:
+   .container {
+     width: 700px;
+     margin: 0 auto;
+   }
+
+
+Types of Boxes
+  - Block-level boxes
+    => Elements occupy 100% of parent's width
+    => Stacked vertically by default
+  - Inline boxes
+    => Only occupy space needed for its content
+    => Causes no line-breaks
+    => height & widths do not apply
+    => padding and margins applies only horizontally
+       padding will increase the fill-area though:
+         a:link {
+	   background-color: orangered;
+	   margin: 20px;
+	   padding: 20px;
+	 }
+  - Inline-Block Boxes
+    => Looks like inline, behaves like block
+    => Occupies only content's space (like inline)
+    => Causes no line-breaks (like inline)
+    => Box-model applies (like block-level)
+    * Example:
+      images => these are actually, inline-block elements
+      proof => if you add margin to it, you see the space show up.
+      	    => you can also set image's width
+  * Change between with the dispay property:
+      display: block;
+      display: inline;
+      display: inline-block;
+
+
+Don't set fixed height on elements!
+  => The height won't increase if the content grows out of the box.
+
+
+Normal Flow VS Absolute Positioning
+  - Normal Flow (Default Positioning) => position: relative;
+  - Absolute Positioning => position: absolute;
+    => Put any element, anywhere you want on the webpage.
+    => Element is removed from the normal flow
+    => No impact on surrounding elements
+    => Use top, left, bottom, right, to position it on the basis of
+       the view port, by default.
+       To position it on the basis of a parent, set
+         position: relative;
+       on the parent explicitly.
+       The positioning will occur based on the first parent on whom
+       position: relative; is set explicitly.
+
+
+Flexbox
+  set display: flex; on parent
+  
+  container = flex container
+  children = flex items
+  main axis = left to right
+  cross axis = top to bottom
+    
+  default behaviour
+    horizontally
+      children takes space needed for their content
+      justify-content: flex-start;
+    vertically
+      all children are as tall as the tallest child
+      align-items: stretch;
+      
+  align a child differently
+    align-self: auto | stretch | flex-start | flex-end | center | baseline
+    
+  change order of display
+    order: 0 | <integer>
+      -1 makes them first, 1 makes it last
+      
+  automatic Alignment
+    align-items: stretch | flex-start | flex-end | center | baseline
+      To align items along cross axis
+    justify-content: flex-start | flex-end | center | space-between |
+                     space-around | space-evenly
+      To align items along main axis
+      
+  adding Spaces Manually
+    add margin manually, & then remove it from where you don't want.
+    Or
+    gap: 0 | <length>
+      To create space between items, without using margin
+      
+  size flex items' width
+    flex-basis: auto | <length>
+      To define an item's width, instead of the width property
+      When content is larger, the element extends
+      flex-basis is more like a suggestion to the browser
+    flex-shrink: 1 | <integer>
+      To allow an element to shrink (0 => no, 1+ => yes)
+      shrink element if needed
+    flex-grow: 0 | <integer>
+      To allow an element to grow (0 => no, 1+ => yes)
+      grow element if needed
+      uses/used to distribute empty space only
+      set the same number on all children for equaling them
+    flex: 0 1 auto | <int> <int> <len>
+      Recommended shorthand for flex-grow, -shrink, -basis
+      
+  properties
+    flex container
+      flex-direction: row | row-reverse | column | column-reverse
+	To define which is the main axis
+
+
+CSS Grid
+  terminology
+    grid containers => parent
+    grid items => children
+    row axis => left to right
+    column axis => top to bottom
+    grid lines
+      divides the grid into rows & cols
+      creates grid cells
+      allows us to place item in a place
+    gutters => gaps
+    grid track => a row or column
+    explicit row => row defined explicitly
+    implicit row => row added automatically due to lack of space
+    
+  set display: grid; on parent
+   then, define your 2D Layout
+   
+  size rows & cols
+    grid-template-columns: <track size>*
+    grid-template-columns: <col-width1> <col-width2>
+      generate 2 columns, as many rows as needed
+    grid-template-rows: <track size>*
+    grid-template-rows: <row-height1> <row-height2>
+      generate 2 rows, as many cols as needed
+    can also use new fr (fraction) unit
+      grid-template-columns: 1fr 1fr 1fr auto;
+        auto => take only space needed by content
+      grid-template-columns: repeat(4, 1fr);
+        repeat comes from css grid
+      to use it in rows, we need to give a height to parent or row
+    child's height & width takes priority
+    
+  elements stretch across the entire cell
+   child's height & width takes priority
+   
+  row height = height of the tallest element
+   child's height & width takes priority
+
+  add gap (or grid-gap)
+    gap: 0 | <length>
+      gap between rows & cols
+    column-gap: 0 | <length>
+      gap between columns
+    row-gap: 0 | <length>
+      gap between rows
+
+  move grid cells
+    grid items
+      grid-column: <start line> / <end line> | span <number>
+      grid-row: <start line> / <end line> | span <number>
+        2 => 2 / 3
+	(1 / 3) = (1 / span 2)
+	1 / -1 => till the end
+	 (works because each grid line has 2 numbers, +ve & -ve)
+	Usage Example
+	  make header/footer take entire row
+	    grid-column: 1 / -1
+	  set same row for multiple elements
+	    .class {
+	      grid-row: 1;
+	    }
+	      all elements having class will be in the first row
+	  make all elements take 2 cells
+	    .class {
+              grid-column: span 2;
+            }
+
+  alignment
+    grid container
+      align items inside cells
+        justify-items: stretch | start | center | end
+	  col/row-axis/horizontal
+      	align-items: stretch | start | center | end
+	  row/column-axis/vertical
+
+      align tracks inside container
+        justify-content: start | center | end | space-between
+	  col/row-axis/horizontal
+      	align-content: start | center | end | space-between
+	  row/column-axis/vertical
+      
+    grid items
+      justify-self: stretch | start | center | end
+      align-self: stretch | start | center | end
+        overwrite justify-items/align-items for single items
+
+
+Symantic Elements
+  header
+    use at beginning of website
+    use at beginning of section or article
+  nav
+    contains ul & lis
+    use at major navigation blocks
+     not all collection of links need be wrapped
+  footer
+  aside
+    additional info
+  article
+    self-contained
+  section
+    similar to article but not should not be self-contained
+    there should be multiple sections which are part of something bigger
+  span
+    for some text
+  blockquote
+    for quotes
+  main
+    for the main content or area
+     not content repeated across multiple pages
+  figure
+    represent self-contained content
+     which sometimes has a caption
+    use figcaption element to give caption
+      <figcaption>Caption</figcaption>
+     example
+       diagram
+       photos
+       code-listing
+       testimonials
+  address
+  
+
+Web Design Ingredients
+  Typography
+  Colors
+  Images/Illustrations
+  Icons
+  Shadows
+  Border-radius
+  Whitespace
+  Visual Hierarchy
+  User Experience
+  Components/Layout
+
+
+Overview Of Website Personalities
+
+  Serious/Elegant
+    For luxury & elegance
+    based on thin serif typefaces
+    golden or pastel colors
+    big high-quality images
+    
+  Minimalist/Simple
+    focuesses on the essential text content
+    using small or medium-sized sans-serif black text, lines
+    few images and icons
+    Example
+      Twitter
+
+  Plain/Neutral
+    design gets out of the way by using neutral & small typefaces
+    very structured layout
+    common in big corps
+    Example
+      Microsoft & Adobe
+
+  Bold/Confident
+    makes an impact by featuring big & bold typography
+    paired with confident use of big & bright colored blocks      
+
+  Calm/Peaceful
+    for products & services that care
+    trasmitted by calming pastel colors
+    soft serif headings
+    and matching images/illustrations
+    Example
+      Octave
+
+  Startup/Upbeat
+    widely used in startups
+    feature medium-sized sans-serif typefaces
+    light-grey text & backgrounds
+    rounded elements
+    Example
+      Capsule
+
+  Playful/Fun
+    colorful & rounded design
+    fueled by creative elements like hand-drawn icons or illustrations
+    animations
+    fun language
+    Example
+      Khan Academy
+
+
+Typography
+  art & technique of arranging type to make written language
+  legible, readable & appealing
+
+  Design Toolbox
+    Google Fonts
+    Font Squirrel
+
+  Rules
+    Use only good & popular typefaces, play it safe
+      Sans-Serif
+        Inter
+	  good for architect like design
+	  modern & minimal
+	Open Sans
+	Roboto
+	Montserrat
+	Work Sans
+	Lato
+      Serif
+        Merriweather
+	Aleo
+	Playfair Display
+	Cormorant
+	Cardo
+	Lora
+
+    Ok to choose only 1 typeface per page, max 2
+
+    Choose the right typeface according to your website personality
+      Choose the right personality
+      Decide between serif & sans-serif typeface
+      Experiment with all "good" typefaces
+      Try different typefaces
+
+    Use good font sizes & weights
+      limit choices
+       use a "type scale" tool or other pre-defined range
+       
+      Font-size guidelines
+        normal text
+	  16px to 32px
+	long text
+	  20px or more
+	headlines
+	  50px+
+	  bold=600+ (depends on personality)
+	for any text
+	  don't use a font weight under 400 (regular)
+
+    Create a good reading experience
+      Use less than 75 characters per line
+      
+      line height
+        for normal-sized text
+          between 1.5 & 2
+        big text
+          go below 1.5
+	the smaller or longer the text, the larger the line height
+	 need to be
+	 
+      Decrease letter spacing in headlines, if it looks unnatural
+      
+      Experiment with all caps for short titles
+       make then small & bold, and increase letter-spacing
+       
+      Usually, don't justify text
+      Don't center long text blocks
+       Small blocks are fine
+
+
+Serif Vs Sans-Serif
+  Serif
+    serifs are decorations on text
+    creates traditional/classic feel
+    converys trustworthiness
+    good for long text
+
+  Sans-Serif
+    modern feel
+    clean & simple
+    easier to choose for beginners
+
+
+Implementing Typography
+  body
+    add font-family
+    
+  add a spacing system (px)
+    2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+    
+  add a font size system (px)
+    10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 / 52 /
+    62 / 74 / 86 / 98
+    
+  Design Tools
+    type-scale.com
+    
+  Add font-size
+  Add line-height
+  Add letter-spacing
+
+
+Colors
+  Color Theory
+    Too complex for you
+  1. Choose the Right Color
+  2. Use a good color tone
+  3. Establish a Color System
+  4. Create lighter and darker "versions" (tints & shades)
+
+
+Choose the Right Color
+  Make main color match your website's personality
+    Red
+      draws a lot of attention
+      symbolizes power, passion, and excitement
+    Orange
+      less aggressive
+      conveys happiness, cheerfulness, and creativity
+    Yellow
+      means joy, brightness, and intelligence
+    Green
+      represents harmony, nature, growth, and health
+    Blue
+      associated with peace, trustworthiness, and professionalism
+    Purple
+      conveys wealth, wisdom, and magic
+    Pink
+      represents romance, care, and affection
+    Brown
+      associated with nature, durability and comfort
+    Black
+      symbolizes power, elegance and minimalism,
+      but also grief and sorrow
+
+
+Use a Good Color Tone
+  Don't choose a random tone or CSS named colors
+  Toolbox
+    Open color
+    tailwindcss
+    flat ui colors 2
+
+
+Establish a Color System
+  You need 2 type of colors in your color palette
+    a main color
+    a grey color
+  Can add more colors
+    accent (secondary) colors
+      Toolbox
+        palleton.com
+	coolors
+        
+
+Tints & Shades
+  Tints
+    lighter versions
+  Shades
+    darker versions
+  Toolbox
+    Make Tint & Shade Generator
+
+
+When & How to Use Colors
+  to draw attention to the most important elements
+  add interesting accents or make entire components or sections
+   stand out
+  strategically in images and illustrations
+    consistent looks and feel
+
+
+Colors & Typography
+  on dark colored backgrounds, try to use a tint of the background
+   (lighter version) for text
+  text should not be completely black
+   lighten it up if it looks heavy and uninviting
+  don't make text too light
+   use a tool to check contrast between text & background colors
+   contrast ratio needs to be at least 4.5:1 for normat text and
+    3:1 for larger text (18px+)
+   Toolbox
+     coolors
+
+
+Button Vs Link
+  If it leads somewhere, its a link
+  If it does something, its a button
+
+
+Implementing Colors
+  color property gets inherited
+  use any contrast checker
+    Toolbox
+      coolors contrast checker
+
+
+Images
+  Use Good Images
+    Should support your website's message & story
+     only use relevant images!
+    Prefer Original Images
+     If not possible, use original-looking stock images
+     (not generic ones!)
+    Toolbox
+      Unsplash
+      Pexels
+      DrawKit
+      unDraw
+  Use Images Well
+    show real people to trigger user's emotions
+    crop images to fit your message
+    experiment combining photos, illustrations & patterns
+  Handling Text On Images
+    Method #1
+      Darken or brighten image (completely or partially,
+       using a gradient)
+    Method #2
+      Position text into neutral image area
+    Method #3
+      Put text in a box
+
+
+Types of Images
+  product photos
+    illustrate the product
+  storytelling photos
+    convey message
+  illustrations
+    more abstract way of storytelling
+    add personal touch
+    2D
+    3D
+  patterns
+    background of an entire section
+    behind images to add visual detail
+    add creativity
+    make less boring
+
+
+Using Images
+  account for high-res screens
+   make image dimension 2x as big as their displayed size
+    Scale Factor
+      Actual pixels the screen contains / Pixels represented
+       on screen
+    On high-res screens, scale factor is 2x or even 3x
+     on "normal" screens its just 1x
+     (1 physical pixel = 1 design pixel)
+  compress images for a lower file size and better performance
+    Toolbox
+      Squoosh
+  when using multiple images side-by-side, make sure they have the
+   exact same dimensions
+
+
+Icons
+  Use Good Icons
+    Use a good icon pack
+     there are tons of free and paid icon packs
+      Toolbox
+        Phosphor icons
+	ionicons
+	icons8
+    Use only one icon pack
+     Don't mix icons from difference icon packs
+    Use SVG icons or icon fonts
+     Don't use bitmap image formats (.jpg and .png)!
+    Icon pack should adjust to your website personality
+     Roundess, weight, and filled/outlined depend on typography
+
+
+Bitmap Vs Vector-Based
+  Bitmap
+    "Regular images"
+      JPG, PNG, GIF
+    Do not scale, become unsharp!
+  Vector-Based
+    SVG images & icon fonts
+    Scale indefinitely!
+
+
+When to use icons
+  use icons to provide visual assistance to text
+  use icons for product feature blocks
+    icon, heading, feature
+    used to describe features
+  use icons to associated with actions, and label them
+  use icons as bullet points
+
+
+How to use Icons
+  To keep icons neutral, use same color as text
+   to draw more attention, use different color
+  Don't make icons larger than what they were designed for
+   If needed, enclose them in a shape
+
+
+Implementing Icons
+  Toolbox
+    heroicons
+  Copy-paste SVG into HTML
+  Change Color
+    stroke
+    fill
+
+
+Shadow History :O
+  2010s
+    Skeuomorphic Design
+      full of realistic details
+      glossy effects
+      lots of shadows
+  Few years later
+    (Windows 8 & iOS 7)
+    Flat Design (Minimal)
+      everything reduced down to essentials
+       no realistic details
+       no glossy effects
+       no shadows
+      This brought usability problems
+  Last couple of years
+    Flat Design 2.0
+      still minimal
+      no realistic details
+      but brings back shadows & depth
+       for better usability
+
+
+Shadows
+  simulates depth (3D)
+  the more shadow, the further away from the interface
+  can be used on boxes & texts
+
+
+Use Shadows Well
+  Use shadows only if needed
+  Less shadows
+    Serious/Elegant
+  More shadows
+    Playful/Fun
+  Always use shadows in small doses
+  Use light shadows
+
+
+When To Use Shadows
+  small shadows
+    for smaller elements to stand out (draw attention)
+      Example
+        call to action buttons
+  medium-sized shadows
+    larger areas to stand out a bit more
+  large shadows
+    for elements that should really float above the interface
+  Experiment with changing shadows on mouse interation
+   (click and hover)
+    Example
+      hover
+        medium-sized shadow "pulls" button closer to the user
+      click
+        smaller shadow "pushes" button back into the interface
+  Experiment with glows (colored shadows)
+
+
+Implementing Shadow
+  box-shadow: horizontal-offset | vertical-offset | blur | scale | color
+    scale
+      radius
+      0 be default
+    color
+      rgba
+        a should be 0.1 at max
+  text-shadow: <same>
+    for texts
+    useful when you have text on images
+  usually, we want the light source to come from top center
+    set horizontal-offset to 0
+  strive for as low shadow as possible
+   just enough so that the the element is highlighted in comparison
+    to other elements
+  you can also add multiple color to shadows
+
+
+Semantic Elements
+  figure
+    for displaying cart
+  nav
+    for navigation links
+  menu
+    for menu buttons in web apps
+  aside
+    additional info
+
+
+Use Border-Radius Well
+  increase for playfulness & fun
+   decrease for seriousness & elegance
+  typefaces have a certain roundness
+   make sure that border-radium matches that roundness
+
+
+Where to Use Border-Radius Well
+  Use border-radius on
+    buttons
+      take away hard edges
+      make completely round
+      only make a part round
+    images
+      slighly round
+      completely round
+    around icons
+      slightly round
+      completely round
+    standout sections
+    other elements
+
+
+Implement Border-Radius
+  border-radius: length;
+  border-bottom-left-radius: length;
+  border-bottom-right-radius: length;
+  Make completely round
+    If it is a square
+      border-radius: 50%;
+    Else
+      border-radius: taller-than-element;
+
+
+Why Whitespace
+  makes design look clean, modern & polished
+  communicates how different pieces are related to one another
+  implies invisible relationship between elements
+
+
+Where to Use Whitespace
+  Use tons of whitespace between sections
+  Use a lot of whitespace between groups of elements
+  Use whitespace between elements
+  Inside groups of elements, try to use whitespace
+   instead of lines
+
+
+How much Whitespace
+  The "Law of Proximity"
+    The more some elements (or groups of elements) belong together,
+     the closer they should be!
+  Start with a lot of whitespace, then remove whitespace from there
+  Too much whitespace looks detached, too little looks too crammed
+  Match other design choices
+    If you have big text or big icons, you need more whitespace
+  Try a hard rule, such as using multiples of 16px for all spacing
+
+
+Visual Hierarchy
+  is about establishing which elements of a design are the most
+   important ones
+  is about drawing attention to these most important elements
+  is about defining a "path" for users, to guide them through
+   the page
+  we use a combination of
+    position
+    size
+    colors
+    spacing
+    borders
+    shadows
+   to establish a meaningful visual hierarchy between elements/components
+
+
+Visual Hierarchy Fundamentals
+  Position important elements closer to the top of the page,
+   where they get more attention
+  Use images mindfully, as they draw a lot of attention
+   (larger images get more attention)
+  Use whitespace strategically to emphasize elements
+
+
+Visual Hierarchy For Text Elements
+  For text elements, use
+    font size
+    font weight
+    color
+    whitespace
+   to convey importance
+
+
+What text elements to emphasize
+  titles
+  sub-titles
+  links
+  buttons
+  data points
+  icons
+ You can also de-emphasize less important text, like
+   labels
+   secondary/additional information
+
+
+Visual Hierarchy Between Components
+  Emphasize an important component using
+    background color
+    shadow
+    border
+  Try emphasizing some component A over component B by
+   de-emphasizing component B
+
+
+What components to emphasize
+  Testimonials
+  call-to-action sections
+  highlight sections
+  preview cards
+  forms
+  pricing tables
+  important rows/columns in tables
+  etc.
+
+
+Design is not just what it looks like and feels like (UI).
+ Design is how it works (UX)
+ - Steve Jobs
+
+
+User Experience (UX)
+  the overall experience the user has while interacting with the product
+    Does the app feel logical and well thought out?
+    Does the navigation work intuitively?
+    Are users reaching their goals?
+  
+
+User Interface (UI)
+  the visual presentation of a product.
+   It's how the graphical interface looks and feels like
+     Layout
+     "Personality"
+     Typography, colors, icons, etc.
+
+
+UI and UX Design
+  UI is graphical interface
+   UI Design is what makes an interface beautiful
+
+
+UX and UX Design
+  UX is experience with the interface
+   UX Design is what makes an interface useful and functional
+  UX Design cannot exist without UI Design!
+
+
+UX Design Guiding Principle: Goals
+  A website or application exists for a reason
+   a user has a goal for visiting it
+   a business has a goal for creating it
+  Good UX design aligns the user's goals with the business' goals
+
+
+UX Rules For Usability
+  Don't design complicated layouts
+   Don't reinvent the wheel
+   Use patterns that users know
+   Creativity is overrated
+   If the page looks familiar, the user can reach their goal faster
+  Make your call-to-action the most prominent element
+   make the text descriptive
+  Use blue text and underlined text only for links!
+    users are so used to it
+  Animations should have a purpose and be fast
+    between 200 and 500ms
+  In forms, align labels and fields in a single vertical line,
+   to make the form easier to scan
+  Offer users good feedback for all actions
+    form errors
+    form success
+    etc.
+  Law of Locality
+    Place action buttons where they will create an effect
+
+
+UX Rules for Website Content
+  Use a descriptive, keywork-focused headline on your main page
+   Don't be vague or fancy!
+  Only include relevant information, efficiently!
+   Cut off fluff and make the content 100% clear
+  Use simple words!
+   Avoid technical jargon and "smart-sounding" words
+  Break up long text with
+   sub-headings
+   images
+   block quotes
+   bullet points
+
+
+The Website-Personalities Framework
+  Serious/Elegant
+  Minimalist/Simple
+  Plain/Neutral
+  Bold/Confident
+  Calm/Peaceful
+  Startup/Upbeat
+  Playful/Fun
+  
+
+Serious/Elegant
+  Overview
+    for luxury and elegance
+    based on
+      thin serif typefaces
+      golden or pastel colors
+      big high-quality images
+  Industries
+    Real estate
+    high fashion
+    jewelry
+    luxury products or services
+  Typography
+    Serif typefaces (especially in headings)
+    light font weight
+    small body font size
+  Colors
+    Gold
+    pastel colors
+    black
+    dark blue
+    grey
+  Images
+    Big
+    high-quality images
+    feature elegant and expensive products
+  Icons
+    Usually no icons
+     but thin icons and lines may be used
+  Shadows
+    Usually no shadows
+  Border-Radius
+    Usually no border-radius
+  Layout
+    creative and experimental layout is common
+
+
+Minimalist/Simple
+  Overview
+    focus on essential text content
+    small or medium-sized sans-serif black
+      text
+      lines
+    few images and icons
+  Industries
+    fashion
+    portfolios
+    minimalism companies
+    software startups
+  Typography
+    boxy/squared sans-serif typefaces
+    small body font sizes
+  Colors
+    usually black or dark grey
+    pure white background
+    usually just one color throughout the design
+  Images
+    few images to add color to design
+    usually no illustrations
+     but if, then just black
+  Icons
+    Usually no icons
+     but small simple black icons may be used
+  Shadows
+    Usually no shadows
+  Border-Radius
+    Usually no border-radius
+  Layout
+    Simple layout
+     a narrow one-column layout is quite common
+
+
+Plain/Neutral
+  Overview
+    small typefaces
+    boxy, structured, and condensed layout
+  Industries
+    well-established corporations
+    companies that don't want to make an impact through design
+  Typography
+    neutral-looking sans-serif typefaces
+    text is usually small and doesn't have visual impact
+  Colors
+    safe colors are employed
+     nothing too bright, too washed-out
+    blues and blacks are common
+  Images
+    frequently used
+     but simple icons may be used
+  
+    
+Bold/Confident
+  Overview
+    design that makes an impact
+    big and bold typography
+    big colored blocks
+  Industries
+    digital agencies
+    software startups
+    travel
+    "strong" companies
+  Typography
+    boxy/squared sans-serif typefaces
+    big and bold typography
+     especially headings
+    uppercase headings are common
+  Colors
+    multiple bright colors
+    big color blocks/sections are used to draw attention
+  Images
+    lots of big images
+  Icons
+    usually no icons
+  Shadows
+    usually no shadows
+  Border-Radius
+    usually no border-radius
+  Layout
+    all kinds of layouts, no particular tendencies
+
+
+Calm/Peaceful
+  Overview
+    for products and services that care about the consumer
+    calming pastel colors
+    soft serif headings
+  Industries
+    healthcare
+    all products with focus on consumer well-being
+  Typography
+    soft serif typefaces frequently used for headings
+     but sans-serif headings might be used too
+     (e.g. for software products)
+  Colors
+    pastel/washed-out colors
+      light oranges
+      yellows
+      browns
+      greens
+      blues
+  Images
+    usually matching the calm color palette
+  Icons
+    icons are quite frequent
+  Shadows
+    usually no shadows
+     but might be used sparingly
+  Border-Radius
+    usually some
+  Layout
+    all kinds of layout
+     no particular tendencies
+
+
+Startup/Upbeat
+  Overview
+    widely used in startups
+    medium-sized sans-serif typefaces
+    light-grey backgrounds
+    rounded elements
+  Industries
+    software startups
+    other modern-looking companies
+  Typography
+    medium-sized headings (not too large)
+    usually one sans-serif typeface in whole design
+    tendency for lighter text colors
+  Colors
+    blues, greens and purples are widely used
+    lots of light backgrounds (mainly gray)
+    gradients are also common
+  Images
+    images or illustrations are always used
+    3D illustrations are modern
+    sometimes patterns and shades add visual details
+  Icons
+    very frequent
+  Shadows
+    subtly shadows are frequent
+    glows are becoming modern
+  Border-Radius
+    very common
+  Layout
+    rows of cards and Z-patterns are usual, as well as animations
+
+
+Playful/Fun
+  Overview
+    colorful and round designs
+    fueled by creative elements like
+      hand-drawn icons or illustrations
+      animations
+      fun language
+  Industries
+    child products
+    animal products
+    food
+  Typography
+    round and creative (e.g. handwritten) sans-serif typefaces
+    centered text is more common
+  Colors
+    multiple colors are frequently
+    colorful layout
+    all over backgrounds and text
+  Images
+     images
+     hand-drawn (or 3D) illustrations
+     geometric shapes & patterns
+    are all frequently used
+  Icons
+    very frequent
+    many times in a hand-drawn style
+  Shadows
+    subtle shadows are quite common
+     but not always
+  Border-Radius
+    very common
+  Layout
+    all kinds of layouts
+     no particular tendencies
+
+
+Personality Axis
+  Serious is opposite of Playful
+    Serious -> Playful
+  Bold is opposite of Calm
+    Calm -> Bold
+
+  Serious
+   -> Serious/Elegant
+   -> Minimalist/Simple
+   -> Plain/Neutral
+   -> Startup/Upbeat
+   -> Playful/Fun
+   -> Playful
+
+  Calm
+   -> Calm/Peaceful
+   -> Plain/Neutral
+   -> Bold/Confident
+   -> Bold
+
+
+Steal Like an Artist
+  Take good parts and adapting them to your needs
+    Toolbox
+      Aggregators
+        land-book
+	onepagelove
+	awwwards
+	screenlane
+
+
+From Elements to Webpage
+  Elements
+   -> Components
+   -> (Patterns) Layouts
+   -> Webpage
+
+  1. Use common elements and components to convey website's information
+  2. Combine components into layouts using common layout patterns
+  3. Assemble different layout areas into a complete, final page
+
+
+Most Common Elements
+  Text
+  Buttons
+  Images
+  Input elements
+  Tags
+
+
+Most Common Components
+  Breadcrumbs
+  Pagination
+  Alert and status bards
+  Statistics
+  Gallery
+  Feature box
+  Preview and profile cards
+  Accordian
+  Tabs
+  Carousel
+  Customer testimonials
+  Customer logos
+  Featured-in logos
+  Steps
+  Forms
+  Tables
+  Pricing tables
+  Modal windows
+
+
+Section Components
+  Navigation
+  Hero section
+  Footer
+  Call-to-action section
+  Feature row
+
+
+Layout Patterns
+  Row of boxes or cards
+  Grid of boxes or cards
+  Z-pattern
+  F-pattern
+  Single-column
+  Sidebar
+  Multi-column/magazine
+  Asymmetry/Experimental
+
+
+Transform
+  Scale Element
+    transform: scale(scale-by)
+  Move Element
+    easy
+    do not effect other elements
+    transform: translate(x,y)
+      x
+        horizontal value
+      y
+        vertical value
+
+
+Absolute Position & Center
+  Vertical Center
+    top: 50%;
+    transform: translate(0, -50%);    
+      first move the element 50% down from the top
+       this is where the element will now start from
+      then move the element up by 50% of its height  
+
+
+Table
+  thead & tbody are siblings
+  td & th
+    mutually exclusive cells
+    should have a parent tr
+    th are centered
+  tr
+    table row
+    should have a parent thead or tbody
+
+  Properties
+    On Table
+      border-collapse: collapse;
+        merge cell borders
+      
+  Tips
+    Change width of cells
+      just change the width of
+        thead th
+        (the first row with headings)
+      and the rest of the table will follow
+
+
+Conditionally Class Selection
+  .parent:hover .child
+    when parent is hovered, select the child
+  .class1.class2
+    class2 is selected only if class1 exists on the element
+    called the End Selector
+
+
+Layout Patterns
+  a specific way of repeating certain component
+   multiple times
+  can nest pattern inside of pattern
+
+  D Patterns
+  
+    Row Of Boxes/Cards
+      Row
+      
+    Grid Of Boxes/Cards
+      Row
+      Column
+      Diagonal
+      
+    Z-Pattern
+      repeat similar Rows with alternating configurations
+       like
+          P  T
+	  T  P
+	  P  T
+         P = Photo
+	 T = Text
+      human eyes have a tendency to scan opposing rows
+
+    F/Inverted-F Pattern
+      Row
+      Column
+      doesn't alternate like Z-Pattern
+
+    Single Column
+      Column
+
+    Multi-Column
+      Different width columns & rows
+
+    Asymmetry/Experimental
+      Mixed
+
+
+Select entire viewport
+  height: 100vh;
+    100% of viewport height
+  width: 100vw
+    100% of viewport width
+    not needed
+
+
+Display content in half container
+  Create a child container width 50% width
+    50% width means 50% width of parent
+  Move the entire content into it
+
+
+Background Image
+  background-image: url(path)
+  background-size: cover;
+    big image will fit container
+  background-position: top | center | bottom
+    when image is bigger
+
+
+Make image darker
+  Create a stack of background image
+   The top image will be a gradient that will be transparent
+  Example
+    background-image: linear-gradient(
+     rgba(34, 34, 34, 0.6),
+     rgba(34, 34, 34, 0.6)
+    ),
+     url(your-url);
+
+
+Gradients
+  Treated as Image
+
+
+linear-gradient
+  background-image: linear-gradient(to-direction, from-color, to-color)
+    Example
+      background-image: linear-gradient(to right, red, blue)
+    to-direction
+      90deg/to right
+        left to right
+      180deg/ to left
+        top to bottom
+      360deg
+        opposite
+      to right bottom
+        top left to right bottom
+
+
+Flexbox move last element to the right
+  Put margin-left to auto on the last element
+   Or Put margin-right to auto on the 2nd last element
+
+
+Flexbox add gap vertically
+  gap applies horizontally be default (main axis)
+   make the main axis vertical
+   then apply gap
+  Example
+    flex-direction: column;
+    gap: <length>
+
+
+Set scrolling
+  overflow: scroll | hidden;
+    hidden hide the overflow elements
+  Note
+    disable flex-shrink
+
+
+7 Steps To A Great Website
+  1. Define
+  2. Plan
+  3. Sketch
+  4. Design and Build
+  5. Test and Optimize
+  6. Launch
+  7. Maintain and Update
+
+
+Define The Project
+  who is this website for?
+    client
+    agency
+    freelancing business
+  what is the website for?
+    define buiness and user goals
+      Example
+        business goal
+	  selling premium dog food
+	user goal
+	  finding high-quality dog food for good price
+  define target audience
+    as specific as possible
+    Example
+      Women, 20 to 40 years old, living in Europe, earning
+       over 2000$/month, with a passion for dogs
+
+
+Plan The Project
+  plan and gather website content
+    copy (text)
+    images
+    videos
+   usually provided by client
+  for bigger sites, plan out the sitemap
+    what pages the site needs
+    how are they related to one another (content hierarchy)
+  based on content, plan what sections each page needs in order
+   to convey the content's message, and in which order
+  define the website personality
+
+
+Sketch Layout and Component Ideas
+  what components are needed
+   how can you use them in layout patterns
+  pen & paper or Figma
+  iterative process
+  
+
+Design and Build Website
+  create design based on
+    selected website personality
+    design guidelines
+    inspiration (other websites)
+  use client's branding (if it exists already) for design decisions
+   whenever possible
+     colors
+     typography
+     icons
+
+
+Test and Optimize
+  website works well in all major browsers
+    Chrome
+    Firefox
+    Safari
+    Edge
+    hopefully not old IE (nothing works there)
+  test website on actual mobile devices, not just DevTools
+  optimize all images, in terms of dimensions and file size
+  fix simple accessibility problems
+    e.g. color contrast issues
+  run the Lighthouse performance test in Chrome DevTools and
+   try to fix reported issues
+  think about Search Engine Optimization (SEO)
+    big shit
+
+
+Launch the Masterpiece
+  domain name
+   should represent the brand well
+   memorable, easy to write
+
+
+Maintain and Keep Updating Website
+  install analytics software
+    Google Analytics
+    Fathom
+   to get statistics about website users
+  maintain a blog (good for SEO)
+  
+
+Omnifood Example
+  Step 1: Define The Project
+    Define WHO the website is for
+      For a client
+    Define WHAT the website is for
+      Business goal
+        Selling monthly food subscription
+      User goal
+        Eating well without spending a lot of time and money
+    Define target audience
+      tech-centered
+      well-paying job
+      interested in a healthy diet
+
+  Step 2: Plan The Project
+    Plan and gather website content
+    Plan out the sitemap
+      no sitemap
+      just a landing pagep
+    Define website personality
+      startup/upbeat
+      calm/peaceful 
+    Plan page Section
+      Logo & Navigation
+      Hero
+      Featured in
+      How it works
+      Meals & list of diets
+      Testimonials & Gallery
+      Pricing & Features
+      CTA
+      Footer
+
+
+Omnifood Design Ingredients
+  don't have to define everything in one go
+  
+  1. TYPOGRAPHY SYSTEM
+       Font sizes (px)
+         10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 /
+	 36 / 44 / 52 / 62 / 74 / 86 / 98
+
+       Font weights
+         Default: 400
+	 Medium: 500
+	 Semi-bold: 600
+	 Bold: 700
+
+       Line heights
+         Default: 1
+	 Small: 1.05
+	 Medium: 1.2
+	 Paragraph default: 1.6
+
+       Letter spacing
+         -0.5px
+	 0.75px
+
+  2. COLORS
+       Primary: #e67e22
+       
+       Tints:
+         #fdf2e9
+	 #fae5d3
+	 #eb984e
+
+       Shades:
+         #cf711f
+	 #45260a
+
+       Accents
+         Greys
+	   #888
+	   #767676 (lightest grey allowed on #fff)
+	   #6f6f6f (lightest grey allowed on #fdf2e9)
+	   #555
+	   #333
+
+  5. SHADOWS
+       0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
+
+  6. BORDER-RADIUS
+       Default: 9px
+       Medium: 11px
+
+  7. WHITESPACE
+       Spacing system (px)
+         2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+
+
+Omnifood Images ToolBox
+  UIFaces
+  unsplash
+
+
+Responsive Design
+  Design technique
+  make webpage adjust to any viewport size
+
+
+4 Responsive Design Ingredients
+  Fluid Layouts
+  Responsive Units
+  Flexible Images
+  Media Queries
+
+
+Fluid Layouts
+  webpage adapts to the current viewport width or height
+  use % (or vh/vw) instead of px
+  use max-width instead of width
+
+
+Responsive Units
+  use rem instead of px
+   to automatically scale the entire layout up or down
+   Tip
+     set 1rem to 10px for easy calculations
+
+
+Flexible Images
+  images don't scale automatically
+  use % for image dimensions
+  use max-width
+
+
+Media Queries
+  change CSS styles on certain viewport dimensions (called breakpoints)
+  useless on its own
+
+
+Responsive Design Strategies
+  Desktop-First
+    write for large screens
+    use media queries for smaller screens
+  Mobile-First
+    write for smaller screens
+    use media queries for larger screens
+    forces us to reduce websites and apps to bare minimum
+
+
+max-width
+  if
+   child.width > viewport.width
+  then
+   child.width = parent.width
+
+  element should only adapt when viewport is smaller
+   not otherwise
+   % can't be used
+
+
+rem
+  root element font-size
+  root is HTML
+  by default HTML's font-size is browser's font-size (16px)
+  by default 1 rem is 16px
+
+  The Power Of rem
+    change font-size of HTML
+     the entire page adapts
+
+
+Setting HTML font-size
+  html {
+    font-size: 62.5%;
+  }
+
+    default browser's font-size = 16px
+    62.5% is the based on the browser's font-size
+    16px * 62.5% = 10px
+
+
+Micro-copy
+  Small texts
+   like in
+     anchor tags
+     call-to-action
+
+
+Default Styling Choices
+  padding: 16px 32px
+    1.6rem 3.2rem
+  text
+    dark
+      #333
+    light
+      #555
+
+
+Add Border inside a Box
+  box-shadow: inset 0 0 0 scale color;
+    inset adds shadow to the inside
+
+
+Animate
+  transition between 2 values using animation
+
+  transition: properties time type
+    properties
+      all
+        animate all properties
+      background-color
+        just animate background-color
+    time
+      animate over what time
+        in seconds or milliseconds
+    transition curve
+      ease-in
+      ease-out
+
+
+Animate Buttons
+  .btn:link,
+  .btn:visited {
+    ...
+    transition: background-color 0.3s
+  }
+
+
+Helper Classes
+  .margin-right-sm {
+    margin-right: 1.6rem !important;
+  }
+
+
+Styling Images
+  set height & width on images when display is flex
+   this is due to a bug in Safari browser
+   
+  stick them together
+    flex gap can't be given negative value
+     use margin-right: negative-value;
+     make images round using border-radius: 50%;
+     give it a border: 3px solid background-color
+
+
+Formatting CSS file
+  keep general classes at the beginning
+  create divisions for sections
+
+
+Styling nav
+  set the last link as call-to-action
+   if hero also has cta, style similarly
+
+
+Styling Links
+  it is a good habit to set display: inline-block;
+  remove text decoration
+   add border bottom for underline
+  CSS
+    .link:link,
+    .link:visited {
+      display: inline-block;
+      color: #e67e22;
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 2px;
+      transition: all 0.3s;
+    }
+
+    .link:hover,
+    .link:active {
+      color: #cf711f;
+      border-bottom: 1px solid transparent;
+    }
+
+
+Adding extra specifity to a Class Selector
+  .class1.class2
+    end operator
+    both classes must exist on the element
+    still using classes but increasing specifity
+
+
+Reusable Grid
+  .grid {
+    display: grid;
+    gap: 9.6rem;
+  }
+
+  .grid--2-cols {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid--3-cols {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+    add this grid & one variation class to the container/parent
+
+
+Reusable Centered Container
+  .container {
+    /* 1140px */
+    max-width: 120rem;
+    margin: 0 auto;
+  }
+
+    1140px & 1200px are standard
+
+
+Styling Hero Section
+  give it a bit more width
+   it's special
+   it will start from a little bit on the left
+   visually bigger than the rest of the content
+   visually better
+
+
+Heading H1
+  there should only be 1 H1 on the page
+
+
+Visual Styling on HTML
+  don't
+  Example
+    create a circle
+  use psuedo classes to create elements
+
+
+Adding Pseudo Classes on Images
+  ::before and ::after don't work on images
+   you can't add child elements to images
+
+
+Add a circle at behind an image
+  Create a square
+  Make it absolute
+  Position it behind the image
+
+  CSS
+    .element {
+      position: relative;
+    }
+
+    .element::before {
+      width: 60%;
+      padding-bottom: 60%;
+      
+      border-radius: 50%;
+
+      background-color: #fae5d3;
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      
+      z-index: -1;
+    }
+
+
+Create double circles behind an image
+  CSS   
+    .element::before,
+    .element::after {
+      content: "";
+      display: block;
+
+      border-radius: 50%;
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .step-img-box::before {
+      width: 60%;
+      padding-bottom: 60%;
+
+      background-color: #fdf2e9;
+
+      z-index: -2;
+    }
+
+    .step-img-box::after {
+      width: 45%;
+      padding-bottom: 45%;
+
+      background-color: #fae5d3;
+
+      z-index: -1;
+    }
+
+
+Create a square
+  .element::before {
+    content: "";
+    display: block;
+  
+    width: 60%;
+    /* height: 60%; */
+    padding-bottom: 60%;
+  }
+  
+    We want to create a square
+    height may not set
+     set padding-bottom = width
+     this will create an element with
+       height 0
+       padding-bottom = width
+      this will create a square
+
+
+z-index
+  very confusing
+  put z-index -1 on the element you want behind
+   or put z-index 1 on the element you want ahead
+
+
+Selecting Heading Tag
+  choose heading based on symantics
+   not based on position in HTML
+   not based on what size we need
+     you can even have h2s with different styles
+   but based on whose heading it is
+
+
+Make logos/images grey
+
+  filter: grayscale(value);
+    won't make everything completely grey
+    
+  filter: brightness(0);
+    make everything completely black
+
+  opacity: 0.5;
+    reduce opacity of black to make it grey
+
+  CSS
+    filter: brightness(0);
+    opacity: 0.5;
+
+
+Styling with Tags
+  Tags are good for categories
+  Usage
+    Normal span elements with background color
+
+
+Ionicons
+  SVGs clutter HTML
+   Use Ionicons
+   Ionicons replaces its tag with SVG
+
+
+Use Ionicons
+  Add script tag before body close
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+
+  Add icons
+    <ion-icon name="heart"></ion-icon>
+
+
+Strong element
+  700 is default
+  Jonas changes it to 500 generally
+
+
+CSS Styling
+  Add classes for styling based on order of appearance in
+  HTML files
+
+
+Add border without border
+  .meal {
+    box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
+    border-radius: 11px;
+    overflow: hidden;
+  }
+
+    overflow hidden will clip content (like images)
+     so the borders will be round forever
+
+
+Hover any element
+  transform: translate(x, y)
+  transform: translateY(y)
+
+  CSS
+    .meal {
+      box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.075);
+      transition: all 0.4s;
+    }
+
+    .meal:hover {
+      transform: translateY(-1.2rem);
+      box-shadow: 0 3.2rem 6.4rem rgba(0, 0, 0, 0.06);
+    }
+
+
+A Full Bleed Section
+  Fill the entire available width
+   no container
+
+
+HTML Entities
+  &mdash;
+    hyphen like (for quotes)
+  &rarr;
+    right arrow
+  &copy;
+    copyright
+    
+
+Line Height
+  line-height: multiplier
+    multiplier is based on the font-size
+
+
+Remove spacing between Images
+  display: block;
+
+
+Add a Ribbon
+  Add a before/after pseudo element
+  Position absolute
+  Parent position relative
+  Style
+  Transform rotate 45 deg
+  Play around with top and right values till it fits
+
+
+Create a colored circle behind an element
+  Give background color
+  Increase size
+  Increase Padding
+
+
+Screen reader Empty Image Div
+  role="img"
+    screen reader will understand this element as an img
+    
+  aria-label="same as alt in images"
+
+
+Pseudo Classes List
+  placeholder
+    Style images placeholder
+
+  focus
+    links, buttons
+
+
+Change Blue outline on buttons & fields
+  *:focus {
+    outline: none;
+    /* outline: 4px dotted #e67e22; */
+    /* outline-offset: 8px; */
+    box-shadow: 0 0 0 0.8rem rgba(230, 125, 34, 0.5);
+  }
+
+    outline
+      similar to border
+      can be styled like border
+        won't round around the element
+      but
+        on outside of the element
+	not a part of the box model
+
+    outline-offset
+      add gap between border and element
+      
+
+href
+  tel:415-201-6370
+    clicking calls open call program on computer
+    
+  mailto:hello@omnifood.com
+    clicking opens email program on computer
+
+
+Push an element to the end vertically
+  display flex, flex-direction column on parent
+  margin-top auto on child
+
+
+Push an element to the end horizontally
+  display flex on parent
+  margin-left auto on child
+
+
+Media Queries
+  On conflict, simply the one written last will be applied
+  You need this in your HTML
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   else
+     responsive design won't work on phones & tablets
+     because browsers on those devices, by default, zoom out the page
+     until it fits the screen
+     with this line, the page will match the screen's width
+       width = device-width
+       initial-scale = 1.0 (don't scale)
+  Never use pixels
+    page won't adjust to the zoom level
+    page won't adjust to the font-size
+  Use em in media queries instead of rem
+    rem has some bugs in some browsers
+    em is the current element size
+  Responsive units in media queries do not respond to the font-size
+   setting in the html element
+    1 rem is not 10px when font-size 62.5% is given to HTML
+    1 rem = 1 em is always equal to the browser's font size (16px default)
+  Try to use less media-queries
+   Don't try to add too many media-queries to fix everything
+   Bad practice
+   1 media query should also handle +/- 200px from itself
+
+
+Calculate em for Media Queries
+  Divide the pixels appearing on DevTools by 16px
+   (default browser font-size)
+  Example
+    @media (max-width: 84em) {
+      .hero {
+        max-width: 120rem;
+      }
+    }
+
+  
+Strategies for Selecting Breakpoints
+  Bad
+    based on popular devices
+  Good
+    based on screen width ranges
+  Perfect
+    when design breaks down
+
+
+When to Write Media Queries
+  Design is breaking
+  Page looks too big for the screen size
+  
+
+Changing Navigation from Desktop to Mobile View
+  Add icon to open mobile nav to HTML
+  Add icon to close mobile nav to HTML
+  Move existing links container with absolute positioning
+   Set relative on parent
+   We need to position this on the basic of the viewport
+  Increase font size
+  Use flex to center
+  Set background transparent
+
+  Show & Hide Navigation
+    display none can't be animated
+     since it removes the element from the page
+    Add a nav-open class to header
+     Use JS to add or remove nav-open class
+     Apply styles on nav if nav-open is present
+       .nav-open .main-nav
+    
+  Hide Navigation
+    opacity 0
+      can't see
+    pointer-events none
+      can't click
+    visibility hidden
+      screen-readers can't read
+
+  Show Navigation
+    opacity 1
+    pointer-events auto
+    visibility visible
+
+
+Slide Element In from the Right
+  Nothing should be absolutely positioned in relation to body
+  
+  Move the element out of the page to the right
+    transform: translateX(100%);
+  Set overflow-x hidden on body & html
+    all elements that overflow out of viewport horizontally are hidden
+    
+
+Animations
+  Always use transform.
+  Always use opacity.
+  These are optimized by CSS.
+
+
+Grid Make 5 (odd) elements centered (Asymmetric Grid)
+  create a container for all 5 elements
+  make a grid with 6 columns on container
+    5 elements + 1 empty cell
+  make 3 elements span 2 columns
+    3 elements * 2 columns = 6 columns
+    css grid will create a new row with 6 columns
+      2 elements + 4 empty cells
+  make the remaining 2 elements span 3 columns
+    row1:  3 elements * 2 columns
+    row2:  2 elements * 3 columns
+  
+
+CSS Grid Empty Div with image (Collapsing Height)
+  empty div (even with image) will collapse if it's the only item
+   in the row
+   give it a fixed height
+
+
+Set Links to go to an Element on Current Page
+  Give Id to the Element
+  href=#id in anchor tag
+  This is called a Page Anchor
+
+
+Set smooth scrolling
+  CSS only
+    set scrolling-behaviour to smooth on html
+  JS
+    Get all links
+    
+    Set on all links
+      if (href === "#")
+        window.scrollTo({
+          top: 0;
+          behaviour: "smooth"
+        });
+
+      if (href !== "#" && href.startsWith("#")) {
+        const sectionEl = document.querySelector(href);
+        sectionEl.scrollIntoView({ behavior: "smooth" });
+      }
+      
+    Add polyfill script to html if needed
+      https://unpkg.com/smoothscroll-polyfill@0.4.4/dist/smoothscroll.min.js
+      This one is to allow smooth scrolling in Safari browser
+
+
+Sticky Navigation
+  set position fixed
+    this will fix the element on the viewport
+    the element will be taken out of the document flow
+     just like display float or position absolute
+     meaning, the other elements will start behind it
+     
+  top 0
+  bottom 0;
+  width: 100%;
+  heighest z-index
+  
+  fix height to some rem
+  
+  use JS to make navigation sticky after the first section
+  use JS to remove sticky navigation when going back to the first section
+    add sticky class when first section passes
+
+    find when a section has moved out of the viewport
+      intersection observer
+        most performant, modern and best way
+        
+    intersection observer
+      new IntersectionObserver(cb, options)
+        cb
+	  gets entries as param
+	    array
+	    1 entry for each threshold value
+	  example
+	    function (entries) {
+	      const ent = entries[0];
+	      if (!ent.isIntersecting) document.body.classList.add("sticky");
+	      if (ent.isIntersecting) document.body.classList.remove("sticky");
+        options
+	  root
+	    where to observe
+	    null
+	      observe the element inside the viewport
+	      null means viewport
+	  threshold
+	    0
+	      event fires when 0% of the element is inside the viewport
+	      moves completely out
+	    1
+	      event fires when 100% of the element is inside the viewport
+	      moves completely in
+	  rootMargin
+	    -80px
+	      must be pixels
+	      event will be fired at threshold - 80px
+      observe the first section
+       when it moves out of the viewport, make navigation sticky
+
+      A problem when sticky class is added
+        when sticky class is added, the element is taken out of the flow
+	so the elements below will now start from behind
+	the page will move up a bit
+	visually, as soon as the element becomes sticky, the element which
+	was supposed to be below it is now behind it
+	so it will appear as that element was skipped
+
+        Fix
+	  Add the height of the element as margin-top on the element below
+
+    CSS
+      add sticky class to parent
+      add styles to child using descendant selector
+        .sticky .child
+      	styles will be added to child iff sticky exists on parent
+      add margin-top on the element below using descendant selector
+        .sticky .element-below-child
+	styles will be added to that element iff sticky exists on parent
+
+
+Check browser compatibility
+  caniuse.com
+
+
+Adding Vendor Prefixes
+  Example
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+      -webkit- is a vendor prefix for Safari & Google Chrome
+      Different browsers have different vendor prefixes
+       like -moz- in mozilla firefox
+
+
+Fixing flexbox gap property missing in some Safari versions
+  use margins to simulate gaps
+
+  JS
+    function checkFlexGap() {
+      var flex = document.createElement("div");
+      flex.style.display = "flex";
+      flex.style.flexDirection = "column";
+      flex.style.rowGap = "1px";
+
+      flex.appendChild(document.createElement("div"));
+      flex.appendChild(document.createElement("div"));
+
+      document.body.appendChild(flex);
+      var isSupported = flex.scrollHeight === 1;
+      flex.parentNode.removeChild(flex);
+      console.log(isSupported);
+
+      if (!isSupported) document.body.classList.add("no-flexbox-gap");
+    }
+    
+    checkFlexGap();
+
+  CSS
+    .no-flexbox-gap .main-nav-list li:not(:last-child) {
+      margin-right: 4.8rem;
+    }
+
+    .no-flexbox-gap .list-item:not(:last-child) {
+      margin-bottom: 1.6rem;
+    }
+
+    .no-flexbox-gap .list-icon:not(:last-child) {
+      margin-right: 1.6rem;
+    }
+
+    .no-flexbox-gap .delivered-faces {
+      margin-right: 1.6rem;
+    }
+
+    .no-flexbox-gap .meal-attribute:not(:last-child) {
+      margin-bottom: 2rem;
+    }
+
+    .no-flexbox-gap .meal-icon {
+      margin-right: 1.6rem;
+    }
+
+    .no-flexbox-gap .footer-row div:not(:last-child) {
+      margin-right: 6.4rem;
+    }
+
+    .no-flexbox-gap .social-links li:not(:last-child) {
+      margin-right: 2.4rem;
+    }
+
+    .no-flexbox-gap .footer-nav li:not(:last-child) {
+      margin-bottom: 2.4rem;
+    }
+
+    @media (max-width: 75em) {
+      .no-flexbox-gap .main-nav-list li:not(:last-child) {
+        margin-right: 3.2rem;
+      }
+    }
+
+    @media (max-width: 59em) {
+      .no-flexbox-gap .main-nav-list li:not(:last-child) {
+        margin-right: 0;
+      	margin-bottom: 4.8rem;
+      }
+    }
+
+
+Google Chrome's Lighthouse
+  may give you wrong information
+  run in & fix what makes sense
+  don't need 100%
+
+
+SEO
+  add a meta tag with name & content
+  give a good title
+  add favicon
+
+Favicon
+  this shows next to the title
+  can be added anywhere
+  jonas likes to do it next to meta
+
+  we need different versions of it
+    for web browser
+      stats
+        width 64px
+      	height 64px
+      	resolution 72px/inch
+      <link rel="icon" href=path />
+      
+    for favouriting a website on Apple
+      stats
+        width 180px
+	height 180px
+	resolution 72px/inch
+      <link rel="apple-touch-icon" href=path />
+        
+    for favouriting a website on Android
+      stats
+        width 192px
+	height 192px
+	resolution 72px/inch
+
+	width 512px
+	height 512px
+	resolution 72px/inch
+
+      create a new file in the home folder with name
+        manifest.webmanifest
+          {
+	    "icons": [
+	      {
+	        "src": "img/favicon-192.png",
+		"type": "image/png",
+		"sizes": "192x192"
+	      },
+	      {
+	        "src": "img/favicon-512.png",
+		"type": "image/png",
+		"sizes": "512x512"
+	      }
+	    ]
+	  }
+
+     <link rel="manifest" href="manifest.webmanifest" />
+
+
+Image Optimization
+  Image Dimensions
+    reduce images dimensions
+      the actual image dimensions should be 2x what's displayed on the screen
+       because high density screen require 2x the pixels
+       
+      Process
+        start with the largest image
+	design the website
+	find out the largest width that the image will ever have
+	round it up to hundreds
+	double its size
+	resize the image to that doubled size
+
+  Compress the Images
+    jpeg
+      can be compressed a lot
+      can't be transparent
+
+      Tool
+	squoosh
+	  you need to play around with different options
+	  webp
+	    this is a modern format
+	    check caniuse.com
+	   just don't drop quality too much for reduced sizes
+
+  Browser Compatibility
+    instead, use a picture tag
+    define your images inside using source
+    the browser will select which image it can display best
+      Example
+        if browser can't select webp, it will select non-webp
+    move your img tag into picture tag
+      browser will replace the src of this image
+      this is where the browser will render one of the defined image
+      the src provided in the image is a fallback
+       just in case the browser doesn't understand the source tag
+
+     Example
+       <picture>
+         <source srcset="img/hero.webp" type="image/webp" />
+	 <source srcset="img/hero-min.png" type="image/png" />
+	 <img
+	   src="img/hero-min.png"
+	   class="hero-img"
+	   alt="Woman enjoying food, meals in storage container, and food bowls
+	   on a table"
+	 />
+       </picture>
+
+
+Deployment to Netlify
+  Register
+  Go to Sites
+  You can use Git or drag & drop your folder
+
+  Change Sitename
+    Go to Site Settings
+    Change Site name
+  
+
+Making Forms work with Netlify
+  remove action attribute
+  add a name attribute to the form
+  add a netlify attribute to the form
+  add a name input to all input fields
+  Netlify also has a separate paid login feature for passwords
+
+  On submission
+    you'll see a customizable alert box
+    Click on Forms
+    Go to Active Forms
+    Click on the name given to the form in HTML
+    You can see the submissions now
+    Only 100 submissions allowed per month
+  
+
+Redeploy on Netlify
+  Click on Deploys
+  Drop your folder
+  
+
