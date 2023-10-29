@@ -30,7 +30,7 @@
 
 ### 05-hero
 
-![05-hero](demo/05-hero.webm)
+![05-hero](demo/05-hero.3.gif)
 
 ### 06-app_layout
 
