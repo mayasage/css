@@ -30,7 +30,7 @@
 
 ### 05-hero
 
-![05-hero](demo/05-hero.gif)
+![05-hero](demo/05-hero.m4v)
 
 ### 06-app_layout
 
